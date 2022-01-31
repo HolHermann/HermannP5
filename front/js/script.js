@@ -25,5 +25,5 @@ fetch("http://localhost:3000/api/products")
     }
   })
   .catch(function (err) {
-    console.alert("Une erreur est survenue");
+    console.log("Une erreur est survenue");
   });
