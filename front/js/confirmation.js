@@ -6,3 +6,13 @@ function confirmationCommande() {
 }
 
 confirmationCommande();
+
+/*
+let url = new URL(window.location.href);
+let search_params = url.searchParams.get("id");
+console.log(search_params);
+
+const idCommande = search_params;
+const commande = `http://localhost:3000/api/products/order/${idCommande}`;
+console.log(commande);
+*/

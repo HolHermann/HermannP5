@@ -38,7 +38,7 @@ const ajoutPanier = (produit) => {
     e.preventDefault();
     const quantite = parseInt(document.getElementById("quantity").value);
     const couleur = document.getElementById("colors").value;
-    if (quantite == 0 || couleur == "") {
+    if (quantite === 0 || couleur == "") {
       alert("Merci de saisir une quantité et de choisir une couleur");
     } else {
       const canapeChoisi = {
@@ -64,7 +64,10 @@ const ajoutPanier = (produit) => {
           canapePanier.id === canapeChoisi.id &&
           canapePanier.color === canapeChoisi.color
         ) {
-          canapePanier.quantity += quantite;
+          canapePanier.quantity *= 1;
+          canapePanier.quantity += quantite * 1;
+          console.log(`canape choisi = ${canapeChoisi.quantity}`); // LOG A SUPPRIMER
+          console.log(`canape panier = ${canapePanier.quantity}`); // LOG A SUPPRIMER
           canapePanier.price += canapeChoisi.price;
           articleExiste = 1;
         }
@@ -78,20 +81,9 @@ const ajoutPanier = (produit) => {
       // On enregistre la mise à jour du panier dans le localStorage
       localStorage.setItem("panier", JSON.stringify(panier));
       alert("Panier mis à jour ! ");
-      redirectionAuPanier();
     }
   });
 };
-function redirectionAuPanier() {
-  // On créait une alerte lorsque l'utilisateur ajoute un canapé dans le panier
-  if (
-    window.confirm(
-      "Votre canapé été ajouté au panier. Pour le consulter, cliquez sur OK."
-    )
-  ) {
-    window.location.href = "cart.html";
-  }
-}
 
 (async () => {
   const produit = await recupProduit();
