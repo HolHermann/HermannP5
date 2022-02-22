@@ -66,8 +66,6 @@ const ajoutPanier = (produit) => {
         ) {
           canapePanier.quantity *= 1;
           canapePanier.quantity += quantite * 1;
-          console.log(`canape choisi = ${canapeChoisi.quantity}`); // LOG A SUPPRIMER
-          console.log(`canape panier = ${canapePanier.quantity}`); // LOG A SUPPRIMER
           canapePanier.price += canapeChoisi.price;
           articleExiste = 1;
         }

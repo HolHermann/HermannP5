@@ -8,10 +8,8 @@ let quantiteCanape = 0;
 
 function affichePanier() {
   panier.map((product) => {
-    console.log(`product quantity = ${product.quantity}`); // LOG à supprimer
     prixPanier += product.price * product.quantity;
     quantiteCanape += product.quantity * 1;
-    console.log(`quantite Canape = ${quantiteCanape}`); // LOG à supprimer
     panierProduits.innerHTML += `
             <article class="cart__item" data-id="${product.id}" data-color="${product.color}">
                 <div class="cart__item__img">
@@ -89,7 +87,7 @@ function envoiFormulaire() {
   boutonCommander.addEventListener("click", (event) => {
     event.preventDefault();
 
-    const client = {
+    const contact = {
       firstName: document.getElementById("firstName").value,
       lastName: document.getElementById("lastName").value,
       address: document.getElementById("address").value,
@@ -99,7 +97,7 @@ function envoiFormulaire() {
 
     function prenomClient() {
       // On test la validation pour le prénom du client
-      const testPrenom = client.firstName;
+      const testPrenom = contact.firstName;
       let regexPrenom = /^[A-Z][A-Za-z\é\è\ê\ï\ç\-]{2,20}$/.test(testPrenom);
       if (regexPrenom) {
         document.querySelector("#firstNameErrorMsg").innerHTML = "";
@@ -113,7 +111,7 @@ function envoiFormulaire() {
 
     function nomClient() {
       // On test la validation pour le nom de famille du client
-      const testNom = client.lastName;
+      const testNom = contact.lastName;
       let regexNom = /^[A-Z][A-Za-z\é\è\ê\ï\ç\-]{2,20}$/.test(testNom);
       if (regexNom) {
         document.querySelector("#lastNameErrorMsg").innerHTML = "";
@@ -127,7 +125,7 @@ function envoiFormulaire() {
 
     function adresseClient() {
       // On test la validation pour l'adresse du client
-      const testAdresse = client.address;
+      const testAdresse = contact.address;
       let regexAdresse =
         /^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/.test(
           testAdresse
@@ -143,7 +141,7 @@ function envoiFormulaire() {
 
     function villeClient() {
       // On test la validation pour la ville du client
-      const testVille = client.city;
+      const testVille = contact.city;
       let regexVille =
         /^[a-zA-Zàâäéèêëïîôöùûüç]+(?:[- ][a-zA-Zàâäéèêëïîôöùûüç]+)*$/.test(
           testVille
@@ -159,7 +157,7 @@ function envoiFormulaire() {
 
     function emailClient() {
       // On test la validation pour l'email du client
-      const testEmail = client.email;
+      const testEmail = contact.email;
       let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
         testEmail
       );
@@ -182,7 +180,7 @@ function envoiFormulaire() {
         emailClient() === true
       ) {
         // On créait une section client dans le formulaire
-        localStorage.setItem("client", JSON.stringify(client));
+        localStorage.setItem("client", JSON.stringify(contact));
         return true;
       } else {
         event.preventDefault();
@@ -192,25 +190,22 @@ function envoiFormulaire() {
 
     let panier2 = JSON.parse(localStorage.getItem("panier"));
     console.log(panier2.length);
-    let panier3 = [];
+    let products = [];
     // Le but est de récupérer uniuqement les ids des canapé sélectionnés
     for (let i = 0; i < panier2.length; i++) {
-      panier3.push(panier2[i].id);
-      console.log(panier3[i]);
-      console.log(panier3);
+      products.push(panier2[i].id);
+      console.log(products[i]);
+      console.log(products);
     }
 
     formValidation();
-    console.log(client);
+    console.log(contact);
     if (formValidation() === true) {
       const commande = {
-        client,
-        panier3,
+        contact,
+        products,
       };
-      console.log(client);
-      console.log(panier3);
       console.log(commande);
-      console.log("test");
       fetch("http://localhost:3000/api/products/order", {
         method: "POST",
         headers: {
@@ -222,11 +217,14 @@ function envoiFormulaire() {
         .then((response) => response.json())
         .then((commandeFinal) => {
           console.log(commandeFinal);
-          //localStorage.clear();
+          localStorage.clear();
           localStorage.setItem("orderId", commandeFinal.orderId);
-          let test = localStorage.getItem("orderId", commandeFinal.orderId);
-          console.log(`test = ${test}`);
-          //document.location.href = "confirmation.html";
+          let numeroCommande = localStorage.getItem(
+            "orderId",
+            commandeFinal.orderId
+          );
+          console.log(`Le numéro de commande est :${numeroCommande}`);
+          document.location.href = `confirmation.html?id=${numeroCommande}`;
         })
         .catch((error) => console.log(error));
     } else {
@@ -234,4 +232,5 @@ function envoiFormulaire() {
     }
   });
 }
+
 envoiFormulaire();
